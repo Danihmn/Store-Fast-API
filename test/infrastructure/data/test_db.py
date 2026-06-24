@@ -1,5 +1,4 @@
 import uuid
-from datetime import datetime
 
 from domain.entities.customer import Customers
 
@@ -11,8 +10,6 @@ def test_insert_data_into_db(session):
         id=id,
         name='John Doe',
         email='john.doe@example.com',
-        created_at=datetime.now(),
-        updated_at=datetime.now(),
         phone='1234567890',
     )
 
@@ -26,6 +23,3 @@ def test_insert_data_into_db(session):
     assert new_data.name == 'John Doe'
     assert new_data.email == 'john.doe@example.com'
     assert new_data.phone == '1234567890'
-
-    session.delete(new_data)
-    session.commit()

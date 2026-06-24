@@ -4,7 +4,7 @@ import pytest
 from dotenv import load_dotenv
 from fastapi.testclient import TestClient
 from sqlalchemy import URL, create_engine
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import sessionmaker
 
 from app import app
 
@@ -26,4 +26,14 @@ def session():
             host='localhost',
         )
     )
-    return Session(engine)
+    connection = engine.connect()
+    transaction = connection.begin()
+
+    Session = sessionmaker(bind=connection)
+    session = Session()
+
+    yield session
+
+    session.close()
+    transaction.rollback()
+    connection.close()
