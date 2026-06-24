@@ -1,12 +1,10 @@
-import os
-
 import pytest
-from dotenv import load_dotenv
 from fastapi.testclient import TestClient
-from sqlalchemy import URL, create_engine
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from app import app
+from settings import Settings
 
 
 @pytest.fixture
@@ -16,16 +14,7 @@ def client():
 
 @pytest.fixture
 def session():
-    load_dotenv('.env')
-    engine = create_engine(
-        URL.create(
-            drivername='postgresql+psycopg2',
-            username=os.getenv('DATABASE_USER'),
-            password=os.getenv('DATABASE_PASSWORD'),
-            database=os.getenv('DATABASE_NAME'),
-            host='localhost',
-        )
-    )
+    engine = create_engine(Settings().DATABASE_URL)  # type: ignore
     connection = engine.connect()
     transaction = connection.begin()
 
