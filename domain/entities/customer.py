@@ -10,15 +10,11 @@ from sqlalchemy import (
     Uuid,
     text,
 )
-from sqlalchemy.orm import Mapped, mapped_column, registry, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 
 from ..abstractions.base import Base
-from . import Addresses, Orders
-
-table_registry = registry()
 
 
-@table_registry.mapped_as_dataclass
 class Customers(Base):
     id: Mapped[uuid.UUID] = mapped_column(
         Uuid, primary_key=True, server_default=text('gen_random_uuid()')
@@ -32,15 +28,6 @@ class Customers(Base):
         DateTime, server_default=text('now()')
     )
     phone: Mapped[Optional[str]] = mapped_column(String(20))
-
-    address: Mapped[list['Addresses']] = relationship(
-        'Addresses',
-        secondary='store.customer_addresses',
-        back_populates='customer',
-    )
-    orders: Mapped[list['Orders']] = relationship(
-        'Orders', back_populates='customer'
-    )
 
     __tablename__ = 'customers'
     __table_args__ = (

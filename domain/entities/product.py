@@ -13,15 +13,11 @@ from sqlalchemy import (
     Uuid,
     text,
 )
-from sqlalchemy.orm import Mapped, mapped_column, registry, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 
 from ..abstractions.base import Base
-from . import OrderProducts
-
-table_registry = registry()
 
 
-@table_registry.mapped_as_dataclass
 class Products(Base):
     id: Mapped[uuid.UUID] = mapped_column(
         Uuid, primary_key=True, server_default=text('gen_random_uuid()')
@@ -38,10 +34,6 @@ class Products(Base):
     )
     stock: Mapped[Optional[int]] = mapped_column(
         Integer, server_default=text('0')
-    )
-
-    order_products: Mapped[list['OrderProducts']] = relationship(
-        'OrderProducts', back_populates='product'
     )
 
     __tablename__ = 'products'

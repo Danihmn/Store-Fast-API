@@ -3,10 +3,9 @@ import uuid
 from typing import Optional
 
 from sqlalchemy import CHAR, DateTime, PrimaryKeyConstraint, String, Uuid, text
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 
 from ..abstractions.base import Base
-from . import Customers, Orders, Stores
 
 
 class Addresses(Base):
@@ -22,17 +21,6 @@ class Addresses(Base):
     )
     updated_at: Mapped[Optional[datetime.datetime]] = mapped_column(
         DateTime, server_default=text('now()')
-    )
-    customer: Mapped[list['Customers']] = relationship(
-        'Customers',
-        secondary='store.customer_addresses',
-        back_populates='address',
-    )
-    orders: Mapped[list['Orders']] = relationship(
-        'Orders', back_populates='address'
-    )
-    stores: Mapped[list['Stores']] = relationship(
-        'Stores', back_populates='address'
     )
 
     __tablename__ = 'addresses'
