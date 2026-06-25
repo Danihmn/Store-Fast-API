@@ -34,13 +34,13 @@ class Orders(Base):
         DateTime, server_default=text('now()')
     )
     status: Mapped[Optional[str]] = mapped_column(
-        String(20), server_default=text("'pendente'::character varying")
+        String(20), server_default=text("'pending'::character varying")
     )
 
     __tablename__ = 'orders'
     __table_args__ = (
         CheckConstraint(
-            "status::text = ANY (ARRAY['pendente'::character varying, 'pago'::character varying, 'enviado'::character varying, 'entregue'::character varying, 'cancelado'::character varying]::text[])",  # noqa: E501
+            "status::text = ANY (ARRAY['pending'::character varying, 'paid'::character varying, 'shipped'::character varying, 'delivered'::character varying, 'canceled'::character varying]::text[])",  # noqa: E501
             name='chk_orders_status',
         ),
         ForeignKeyConstraint(
