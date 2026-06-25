@@ -1,9 +1,8 @@
-from fastapi import APIRouter
-from sqlalchemy import create_engine, select
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, Depends
+from sqlalchemy import select
 
 from domain.entities.address import Addresses
-from settings import Settings
+from infrastructure.data.database import get_session
 
 router = APIRouter(
     prefix='/address',
@@ -11,11 +10,7 @@ router = APIRouter(
 
 
 @router.get('/get_all')
-async def get_address():
-    engine = create_engine(Settings().DATABASE_URL)  # type: ignore
-    session = Session(engine)
+def get_address(session=Depends(get_session)):
+    address = session.scalars(select(Addresses)).all()
 
-    addresses = session.scalars(select(Addresses)).all()
-    session.close()
-
-    return addresses
+    return address

@@ -4,12 +4,16 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from app import app
+from infrastructure.data.database import get_session
 from settings import Settings
 
 
 @pytest.fixture
 def client():
-    return TestClient(app)
+    with TestClient(app) as client:
+        app.dependency_overrides[get_session] = session
+        yield client
+        app.dependency_overrides.clear()
 
 
 @pytest.fixture
