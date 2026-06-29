@@ -2,6 +2,7 @@ from fastapi import FastAPI
 
 from api.endpoints.address_endpoints import router as address_routers
 from api.endpoints.customer_endpoints import router as customer_routers
+from api.endpoints.user_endpoints import router as user_routers
 
 app = FastAPI(
     title='Store API',
@@ -11,3 +12,4 @@ app = FastAPI(
 
 app.include_router(router=address_routers)
 app.include_router(router=customer_routers)
+app.include_router(router=user_routers)
