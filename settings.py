@@ -9,6 +9,9 @@ class Settings(BaseSettings):
     DATABASE_PASSWORD: str
     DATABASE_NAME: str
     DATABASE_HOST: str = 'localhost'
+    JWT_SECRET_KEY: str
+    JWT_EXPIRATION_TIME: int
+    JWT_ALGORITHM: str
 
     @property
     def DATABASE_URL(self) -> URL:

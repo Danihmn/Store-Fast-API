@@ -1,7 +1,10 @@
+import datetime
 import uuid
+from typing import Optional
 
 from sqlalchemy import (
     CheckConstraint,
+    DateTime,
     PrimaryKeyConstraint,
     String,
     Text,
@@ -27,6 +30,12 @@ class Users(Base):
     role: Mapped[str] = mapped_column(
         String(20),
         nullable=False,
+    )
+    created_at: Mapped[Optional[datetime.datetime]] = mapped_column(
+        DateTime, server_default=text('now()')
+    )
+    updated_at: Mapped[Optional[datetime.datetime]] = mapped_column(
+        DateTime, server_default=text('now()')
     )
 
     __tablename__ = 'users'

@@ -1,4 +1,4 @@
-from infrastructure.security.security import hash_password, is_valid_password
+from infrastructure.security.password import hash_password, is_valid_password
 
 
 def test_hash_password():

@@ -12,6 +12,7 @@ dependencies = [
     "pyjwt>=2.13.0",
     'sqlacodegen>=4.0.4',
     'sqlalchemy>=2.0.51',
+    "tzdata>=2026.2",
 ]
 
 [dependency-groups]
