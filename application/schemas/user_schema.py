@@ -11,6 +11,12 @@ class UserCreate(BaseModel):
     role: str
 
 
+class UserOut(BaseModel):
+    name: str
+    email: EmailStr
+    active: Optional[bool] = True
+
+
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
