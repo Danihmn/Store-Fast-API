@@ -1,21 +1,24 @@
 from typing import Annotated
 
+from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends
 
 from application.usecases.user import AuthenticateCommand, AuthenticateHandler
-from dependencies import get_user_authenticate_handler
+from infrastructure.dependency_injection.container import Container
 
 router = APIRouter(prefix='/users')
 
 
 @router.post('/login')
-def login_user(
+@inject
+async def login_user(
     command: AuthenticateCommand,
     handler: Annotated[
-        AuthenticateHandler, Depends(get_user_authenticate_handler)
+        AuthenticateHandler,
+        Depends(Provide[Container.user_authenticate_handler]),
     ],
 ):
     """
-    Authenticate a user and return an access token.
+    Autentica um usuário e retorna um token de acesso.
     """
-    return handler.handle(command)
+    return await handler.handle(command)

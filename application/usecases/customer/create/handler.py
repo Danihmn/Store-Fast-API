@@ -12,8 +12,8 @@ class Handler:
     def __init__(self, repository: CustomerRepository):
         self.repository = repository
 
-    def handle(self, command: Command) -> Response:
-        existing = self.repository.get_customer_by_email_or_phone(
+    async def handle(self, command: Command) -> Response:
+        existing = await self.repository.get_customer_by_email_or_phone(
             email=command.email, phone=command.phone
         )
 
@@ -31,6 +31,6 @@ class Handler:
         customer = Customers(
             name=command.name, email=command.email, phone=command.phone
         )
-        created = self.repository.create_customer(customer)
+        created = await self.repository.create_customer(customer)
 
         return Response.model_validate(created)

@@ -2,6 +2,7 @@ import uuid
 from http import HTTPStatus
 from typing import Annotated
 
+from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Body, Depends, HTTPException, Path, Query
 from fastapi.responses import JSONResponse
 
@@ -21,13 +22,7 @@ from application.usecases.customer import (
     UpdateHandler,
     UpdateResponse,
 )
-from dependencies import (
-    get_customer_by_id_handler,
-    get_customer_create_handler,
-    get_customer_delete_handler,
-    get_customer_get_all_handler,
-    get_customer_update_handler,
-)
+from infrastructure.dependency_injection.container import Container
 from infrastructure.security.token import get_current_user
 
 router = APIRouter(
@@ -38,9 +33,12 @@ router = APIRouter(
 @router.get(
     '/', response_model=list[GetAllResponse], response_class=JSONResponse
 )
-def get_customers(
+@inject
+async def get_customers(
     command: Annotated[GetAllCommand, Query()],
-    handler: Annotated[GetAllHandler, Depends(get_customer_get_all_handler)],
+    handler: Annotated[
+        GetAllHandler, Depends(Provide[Container.customer_get_all_handler])
+    ],
     current_user: Annotated[dict, Depends(get_current_user)],
 ):
     if current_user['role'] != 'admin':
@@ -49,7 +47,7 @@ def get_customers(
             detail='You do not have permission to access this resource',
         )
 
-    return handler.handle(command)
+    return await handler.handle(command)
 
 
 @router.get(
@@ -57,9 +55,12 @@ def get_customers(
     response_model=GetByIdResponse,
     response_class=JSONResponse,
 )
-def get_customer_by_id(
+@inject
+async def get_customer_by_id(
     command: Annotated[GetByIdCommand, Path()],
-    handler: Annotated[GetByIdHandler, Depends(get_customer_by_id_handler)],
+    handler: Annotated[
+        GetByIdHandler, Depends(Provide[Container.customer_get_by_id_handler])
+    ],
     current_user: Annotated[dict, Depends(get_current_user)],
 ):
     if current_user['role'] != 'admin':
@@ -68,7 +69,7 @@ def get_customer_by_id(
             detail='You do not have permission to access this resource',
         )
 
-    return handler.handle(command)
+    return await handler.handle(command)
 
 
 @router.post(
@@ -77,9 +78,12 @@ def get_customer_by_id(
     response_class=JSONResponse,
     status_code=HTTPStatus.CREATED,
 )
-def create_customer(
+@inject
+async def create_customer(
     command: CreateCommand,
-    handler: Annotated[CreateHandler, Depends(get_customer_create_handler)],
+    handler: Annotated[
+        CreateHandler, Depends(Provide[Container.customer_create_handler])
+    ],
     current_user: Annotated[dict, Depends(get_current_user)],
 ):
     if current_user['role'] != 'admin':
@@ -88,7 +92,7 @@ def create_customer(
             detail='You do not have permission to access this resource',
         )
 
-    return handler.handle(command)
+    return await handler.handle(command)
 
 
 @router.put(
@@ -96,10 +100,13 @@ def create_customer(
     response_model=UpdateResponse,
     response_class=JSONResponse,
 )
-def update_customer(
+@inject
+async def update_customer(
     customer_id: Annotated[uuid.UUID, Path()],
     command: Annotated[UpdateCommand, Body()],
-    handler: Annotated[UpdateHandler, Depends(get_customer_update_handler)],
+    handler: Annotated[
+        UpdateHandler, Depends(Provide[Container.customer_update_handler])
+    ],
     current_user: Annotated[dict, Depends(get_current_user)],
 ):
     if current_user['role'] != 'admin':
@@ -108,16 +115,19 @@ def update_customer(
             detail='You do not have permission to access this resource',
         )
 
-    return handler.handle(customer_id, command)
+    return await handler.handle(customer_id, command)
 
 
 @router.delete(
     '/{customer_id}',
     status_code=HTTPStatus.NO_CONTENT,
 )
-def delete_customer(
+@inject
+async def delete_customer(
     command: Annotated[DeleteCommand, Path()],
-    handler: Annotated[DeleteHandler, Depends(get_customer_delete_handler)],
+    handler: Annotated[
+        DeleteHandler, Depends(Provide[Container.customer_delete_handler])
+    ],
     current_user: Annotated[dict, Depends(get_current_user)],
 ):
     if current_user['role'] != 'admin':
@@ -126,4 +136,4 @@ def delete_customer(
             detail='You do not have permission to access this resource',
         )
 
-    handler.handle(command)
+    await handler.handle(command)

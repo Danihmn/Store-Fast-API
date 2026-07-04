@@ -7,11 +7,11 @@ class Handler:
     def __init__(self, repository: CustomerRepository):
         self.repository = repository
 
-    def handle(
+    async def handle(
         self,
         command: Command,
     ) -> list[Response]:
-        customers = self.repository.get_all_customers(
+        customers = await self.repository.get_all_customers(
             skip=command.skip, take=command.take
         )
 

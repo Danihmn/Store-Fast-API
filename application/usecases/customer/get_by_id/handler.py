@@ -7,10 +7,12 @@ class Handler:
     def __init__(self, repository: CustomerRepository):
         self.repository = repository
 
-    def handle(
+    async def handle(
         self,
         command: Command,
     ) -> Response:
-        customer = self.repository.get_customer_by_id(command.customer_id)
+        customer = await self.repository.get_customer_by_id(
+            command.customer_id
+        )
 
         return Response.model_validate(customer)

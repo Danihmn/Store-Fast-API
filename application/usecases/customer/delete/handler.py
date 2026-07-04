@@ -10,13 +10,11 @@ class Handler:
     def __init__(self, repository: CustomerRepository):
         self.repository = repository
 
-    def handle(self, command: Command) -> None:
-        customer = self.repository.get_customer_by_id(command.customer_id)
+    async def handle(self, command: Command) -> None:
+        deleted = await self.repository.delete_customer(command.customer_id)
 
-        if not customer:
+        if deleted is False:
             raise HTTPException(
                 status_code=HTTPStatus.NOT_FOUND,
-                detail='Customer not found',
+                detail=f'Customer with ID {command.customer_id} not found.',
             )
-
-        self.repository.delete_customer(command.customer_id)

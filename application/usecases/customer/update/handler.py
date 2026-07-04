@@ -13,11 +13,15 @@ class Handler:
     def __init__(self, repository: CustomerRepository):
         self.repository = repository
 
-    def handle(self, customer_id: uuid.UUID, command: Command) -> Response:
+    async def handle(
+        self, customer_id: uuid.UUID, command: Command
+    ) -> Response:
         new_customer = Customers(
             name=command.name, email=command.email, phone=command.phone
         )
-        customer = self.repository.update_customer(customer_id, new_customer)
+        customer = await self.repository.update_customer(
+            customer_id, new_customer
+        )
 
         if not customer:
             raise HTTPException(

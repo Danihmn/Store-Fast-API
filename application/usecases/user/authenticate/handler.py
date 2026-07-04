@@ -13,8 +13,8 @@ class Handler:
     def __init__(self, repository: UserRepository):
         self.repository = repository
 
-    def handle(self, command: Command) -> Response:
-        user = self.repository.get_user_by_email(command.email)
+    async def handle(self, command: Command) -> Response:
+        user = await self.repository.get_user_by_email(command.email)
 
         if not user or not is_valid_password(
             command.password, user.hashed_password
