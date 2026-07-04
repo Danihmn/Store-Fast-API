@@ -26,7 +26,7 @@ from infrastructure.dependency_injection.container import Container
 from infrastructure.security.token import get_current_user
 
 router = APIRouter(
-    prefix='/customer',
+    prefix='/customers',
 )
 
 
