@@ -20,7 +20,7 @@ class Handler:
             command.password, user.hashed_password
         ):
             raise HTTPException(
-                status_code=HTTPStatus.NOT_FOUND,
+                status_code=HTTPStatus.UNAUTHORIZED,
                 detail='Invalid credentials',
             )
 
