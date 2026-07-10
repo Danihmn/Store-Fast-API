@@ -8,12 +8,14 @@ dependencies = [
     'alembic>=1.18.4',
     "asyncpg>=0.31.0",
     "dependency-injector>=4.49.1",
+    "factory-boy>=3.3.3",
     'fastapi[standard]>=0.138.0',
     'psycopg2-binary>=2.9.12',
     'pwdlib[argon2]>=0.3.0',
     "pyjwt>=2.13.0",
+    "pytest-asyncio>=1.4.0",
     'sqlacodegen>=4.0.4',
-    'sqlalchemy>=2.0.51',
+    "sqlalchemy[asyncio]>=2.0.51",
     "tzdata>=2026.2",
 ]
 
@@ -23,6 +25,7 @@ dev = ['pytest>=9.1.1', 'pytest-cov>=7.1.0', 'ruff>=0.15.18', 'taskipy>=1.14.1']
 [tool.pytest.ini_options]
 pythonpath = ['.']
 addopts = '-p no:warnings'
+asyncio_mode = 'auto'
 
 [tool.ruff]
 line-length = 79

@@ -3,7 +3,7 @@ import uuid
 from domain.entities.customer import Customers
 
 
-def test_insert_data_into_db(session):
+async def test_insert_data_into_db(session):
     id = uuid.uuid4()
 
     costumer = Customers(
@@ -14,9 +14,9 @@ def test_insert_data_into_db(session):
     )
 
     session.add(costumer)
-    session.commit()
+    await session.commit()
 
-    new_data = session.get(Customers, id)
+    new_data = await session.get(Customers, id)
 
     assert new_data is not None
     assert new_data.id == id
