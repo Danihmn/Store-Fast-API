@@ -1,3 +1,5 @@
+from contextlib import asynccontextmanager
+
 import pytest
 import pytest_asyncio
 from fastapi.testclient import TestClient
@@ -5,6 +7,7 @@ from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 from app import app
 from infrastructure.data.database import session_scope
+from infrastructure.repositories.customer_repository import CustomerRepository
 from settings import Settings
 
 
@@ -31,3 +34,12 @@ async def session():
     await transaction.rollback()
     await connection.close()
     await engine.dispose()
+
+
+@pytest.fixture
+def customer_repository(session):
+    @asynccontextmanager
+    async def session_factory():
+        yield session
+
+    return CustomerRepository(session_factory)

@@ -59,7 +59,7 @@ class CustomerRepository:
             customer.phone = new_customer.phone
             customer.updated_at = datetime.datetime.now(
                 tz=datetime.timezone.utc
-            )
+            ).replace(tzinfo=None)
 
             await session.flush()
             await session.refresh(customer)
